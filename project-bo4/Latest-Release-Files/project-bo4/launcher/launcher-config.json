@@ -6,5 +6,8 @@
     },
     "audio": {
         "volume": 5
+    },
+    "launcher": {
+        "closeLauncherOnPlay": true
     }
 }

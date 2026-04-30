@@ -26,12 +26,15 @@ private:
     void showMessageBox(QMessageBox::Icon icon, const QString& title, const QString& text);
     bool copyLPCFolder();
     void playStartupSound();
+    void saveCloseLauncheronPlay();
+    void loadCloseLauncheronPlay();
     void saveVolumeSettings();
     void loadVolumeSettings();
     
     std::wstring launcherDir;
     std::wstring serverIpFile;
     bool reshadeEnabled;
+	bool closeLauncherOnPlay;
     int volume;
     std::wstring soundPath;
 
@@ -44,6 +47,7 @@ private:
     QPushButton* discordButton;
     QPushButton* wikiButton;
     QPushButton* settingsButton;
+    QCheckBox* closeLauncherCheckbox;
     QCheckBox* reshadeCheckbox;
     QLabel* volumeLabel;
     QSlider* volumeSlider;

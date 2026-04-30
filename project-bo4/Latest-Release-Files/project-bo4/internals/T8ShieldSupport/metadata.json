@@ -282,12 +282,12 @@
         {
             "type": "localizeentry",
             "name": "shield/alt_movement",
-            "value": "Alt Movement Mode"
+            "value": "Omni Movement Mode"
         },
         {
             "type": "localizeentry",
             "name": "shield/alt_movement_desc",
-            "value": "Enables Alternative Movement Mechanics (Like infinite sliding, requires restart, will make the gsc/csc checksum always red!)"
+            "value": "Enables Alternative Movement Mechanics (Like omni movement, infinite sliding, etc, requires restart and will make the gsc/csc checksum always red!)"
         },
         {
             "type": "localizeentry",
@@ -443,6 +443,51 @@
             "type": "localizeentry",
             "name": "shield/bothard_desc",
             "value": "Adds an Extra Bots (18 in Total if with All Bots), and Sets the Extra Bots to a Very Hard Mode"
+        },
+        {
+            "type": "localizeentry",
+            "name": "shield/blackout_tab_gamemode",
+            "value": "Gamemode"
+        },
+        {
+            "type": "localizeentry",
+            "name": "shield/blackout_tab_events",
+            "value": "Events"
+        },
+        {
+            "type": "localizeentry",
+            "name": "shield/blackout_tab_itemspawns",
+            "value": "Item Spawns"
+        },
+        {
+            "type": "localizeentry",
+            "name": "shield/blackout_tab_weaponspawns",
+            "value": "Weapon Spawns"
+        },
+        {
+            "type": "localizeentry",
+            "name": "shield/blackout_tab_perks",
+            "value": "Perks"
+        },
+        {
+            "type": "localizeentry",
+            "name": "shield/blackout_tab_enemiesspawns",
+            "value": "Enemies Spawns"
+        },
+        {
+            "type": "localizeentry",
+            "name": "shield/blackout_tab_vehiclespawns",
+            "value": "Vehicle Spawns"
+        },
+        {
+            "type": "localizeentry",
+            "name": "shield/blackout_tab_characters",
+            "value": "Character Unlocking"
+        },
+        {
+            "type": "localizeentry",
+            "name": "shield/blackout_tab_misc",
+            "value": "Misc (Experimental)"
         },
         {
             "type": "localizeentry",

@@ -25,6 +25,7 @@ ipButton(nullptr),
 discordButton(nullptr),
 wikiButton(nullptr),
 settingsButton(nullptr),
+closeLauncherCheckbox(nullptr),
 reshadeCheckbox(nullptr),
 volumeLabel(nullptr),
 volumeSlider(nullptr),
@@ -166,8 +167,13 @@ progressBar(nullptr)
     QSpacerItem* settingsSpacer = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
     settingsLayout->addItem(settingsSpacer);
 
+	//close launcher on play checkbox
+    closeLauncherCheckbox = new QCheckBox("Close Launcher on Play", this);
+    closeLauncherCheckbox->setStyleSheet("color: white; background: transparent; font-weight: bold;");
+    settingsLayout->addWidget(closeLauncherCheckbox);
+
     //settings button 
-    settingsButton = new QPushButton("Settings", this);
+    settingsButton = new QPushButton("Client Settings", this);
     settingsButton->setStyleSheet("background-color: rgba(85, 85, 85, 180); color: white; border: none; padding: 5px; min-width: 80px;");
     settingsButton->setFixedWidth(120);
     settingsLayout->addWidget(settingsButton);
@@ -213,14 +219,19 @@ progressBar(nullptr)
     connect(wikiButton, &QPushButton::clicked, this, &MainWindow::openDocs);
     connect(volumeSlider, &QSlider::valueChanged, this, &MainWindow::updateVolume);
     connect(settingsButton, &QPushButton::clicked, this, &MainWindow::openSettings);
+    connect(closeLauncherCheckbox, &QCheckBox::stateChanged, this, [this](int state) {
+        closeLauncherOnPlay = (state == Qt::Checked);
+        saveCloseLauncheronPlay();
+        });
     connect(reshadeCheckbox, &QCheckBox::stateChanged, this, [this](int state) {
         reshadeEnabled = (state == Qt::Checked);
         });
 
     setAttribute(Qt::WA_TranslucentBackground);
 
-    // Load volume settings from JSON, after creating everything.
+    // Load settings from JSON, after creating everything.
     loadVolumeSettings();
+    loadCloseLauncheronPlay();
 }
 
 void MainWindow::startGame(bool isOnline, bool isVanilla) {
@@ -232,6 +243,8 @@ void MainWindow::startGame(bool isOnline, bool isVanilla) {
     progressBar->setVisible(true);
     progressBar->setValue(0);
 
+    // not really needed for multiple instances
+    /*
     if (DllLoading::isGameRunning()) {
         showMessageBox(QMessageBox::Warning, "Warning", "Game is already running!");
         progressBar->setVisible(false);
@@ -241,6 +254,7 @@ void MainWindow::startGame(bool isOnline, bool isVanilla) {
         offlineButton->setEnabled(true);
         return;
     }
+    */
 
     progressBar->setValue(15);
 
@@ -330,6 +344,10 @@ void MainWindow::startGame(bool isOnline, bool isVanilla) {
 	vanillaButton->setEnabled(true);
     onlineButton->setEnabled(true);
     offlineButton->setEnabled(true);
+
+	// close launcher after starting game
+    if (closeLauncherOnPlay)
+	    QTimer::singleShot(1000, this, &MainWindow::close);
 }
 
 void MainWindow::setName() {
@@ -529,6 +547,82 @@ void MainWindow::showMessageBox(QMessageBox::Icon icon, const QString& title, co
     msgBox.setText(text);
     msgBox.setStandardButtons(QMessageBox::Ok);
     msgBox.exec();
+}
+
+void MainWindow::saveCloseLauncheronPlay() {
+    try {
+
+        std::string jsonPath = (fs::path(launcherDir) / "launcher-config.json").string();
+
+        rapidjson::Document document;
+        if(fs::exists(jsonPath)) {
+            std::ifstream file(jsonPath);
+            std::string jsonContent((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+            file.close();
+
+            if(!jsonContent.empty()) {
+                document.Parse(jsonContent.c_str());
+            }
+        }
+
+        if(!document.IsObject()) {
+            document.SetObject();
+        }
+
+        if(!document.HasMember("launcher")) {
+            rapidjson::Value audioObject(rapidjson::kObjectType);
+            document.AddMember("launcher", audioObject, document.GetAllocator());
+        }
+
+        rapidjson::Value& audioObject = document["launcher"];
+        if(audioObject.HasMember("closeLauncherOnPlay")) {
+            audioObject["closeLauncherOnPlay"] = closeLauncherOnPlay;
+        }
+        else {
+            rapidjson::Value closeValue(closeLauncherOnPlay);
+            audioObject.AddMember("closeLauncherOnPlay", closeValue, document.GetAllocator());
+        }
+
+        rapidjson::StringBuffer buffer;
+        rapidjson::PrettyWriter<rapidjson::StringBuffer> writer(buffer);
+        document.Accept(writer);
+
+        std::ofstream outFile(jsonPath);
+        outFile << buffer.GetString();
+        outFile.close();
+    }
+    catch(const std::exception& e) {
+
+    }
+}
+
+void MainWindow::loadCloseLauncheronPlay() {
+    try {
+        std::string jsonPath = (fs::path(launcherDir) / "launcher-config.json").string();
+
+        if(fs::exists(jsonPath)) {
+            std::ifstream file(jsonPath);
+            std::string jsonContent((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+            file.close();
+
+            if(!jsonContent.empty()) {
+                rapidjson::Document document;
+                document.Parse(jsonContent.c_str());
+
+                if(document.IsObject() && document.HasMember("launcher") &&
+                    document["launcher"].IsObject() && document["launcher"].HasMember("closeLauncherOnPlay") &&
+                    document["launcher"]["closeLauncherOnPlay"].IsBool()) {
+                    closeLauncherOnPlay = document["launcher"]["closeLauncherOnPlay"].GetBool();
+
+                    if(closeLauncherCheckbox) {
+                        closeLauncherCheckbox->setChecked(closeLauncherOnPlay);
+                    }
+                }
+            }
+        }
+    }
+    catch(const std::exception& e) {
+    }
 }
 
 void MainWindow::saveVolumeSettings() {
