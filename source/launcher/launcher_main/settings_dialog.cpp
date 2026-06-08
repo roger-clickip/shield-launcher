@@ -133,8 +133,8 @@ public:
                             bool ok;
                             QString newValue = QInputDialog::getText(
                                 treeWidget, 
-                                "Edit " + itemName, 
-                                "Enter value for " + itemName + ":", 
+                                "Editar " + itemName, 
+                                "Digite o valor para " + itemName + ":", 
                                 QLineEdit::Normal, 
                                 currentValue, 
                                 &ok
@@ -156,7 +156,7 @@ public:
 };
 
 SettingsDialog::SettingsDialog(QWidget* parent) : QDialog(parent) {
-    setWindowTitle("Settings");
+    setWindowTitle("Configurações");
     setMinimumSize(600, 500);
     
     WindowUtils::setWindowIcon(this);
@@ -187,7 +187,7 @@ void SettingsDialog::showContextMenu(const QPoint& pos) {
     QMenu contextMenu(this);
     
     if (item->childCount() == 0) {
-        QAction* editAction = new QAction("Edit Value", this);
+        QAction* editAction = new QAction("Editar Valor", this);
         connect(editAction, &QAction::triggered, this, [this, item]() {
             treeWidget->editItem(item, 1);
         });
@@ -253,9 +253,9 @@ void SettingsDialog::createLayout() {
     QHBoxLayout* buttonLayout = new QHBoxLayout();
     buttonLayout->setSpacing(10);
     
-    saveButton = new QPushButton("Save", this);
-    resetButton = new QPushButton("Reset", this);
-    cancelButton = new QPushButton("Cancel", this);
+    saveButton = new QPushButton("Salvar", this);
+    resetButton = new QPushButton("Resetar", this);
+    cancelButton = new QPushButton("Cancelar", this);
     
     QString buttonStyle = 
         "QPushButton {"
@@ -328,14 +328,14 @@ void SettingsDialog::loadSettings() {
     treeWidget->clear();
     
     if (!fs::exists(jsonPath)) {
-        showMessageBox(QMessageBox::Critical, "Error", "Could not find project-bo4.json file");
+        showMessageBox(QMessageBox::Critical, "Erro", "Arquivo project-bo4.json não encontrado");
         return;
     }
     
     FILE* fp = nullptr;
     fopen_s(&fp, jsonPath.c_str(), "rb");
     if (!fp) {
-        showMessageBox(QMessageBox::Critical, "Error", "Failed to open settings file");
+        showMessageBox(QMessageBox::Critical, "Erro", "Falha ao abrir o arquivo de configurações");
         return;
     }
     
@@ -346,7 +346,7 @@ void SettingsDialog::loadSettings() {
     fclose(fp);
     
     if (doc.HasParseError() || !doc.IsObject()) {
-        showMessageBox(QMessageBox::Critical, "Error", "Invalid JSON format in settings file");
+        showMessageBox(QMessageBox::Critical, "Erro", "Formato JSON inválido no arquivo de configurações");
         return;
     }
     
@@ -477,7 +477,7 @@ void SettingsDialog::saveSettings() {
     FILE* fp = nullptr;
     fopen_s(&fp, jsonPath.c_str(), "wb");
     if (!fp) {
-        showMessageBox(QMessageBox::Critical, "Error", "Failed to save settings file");
+        showMessageBox(QMessageBox::Critical, "Erro", "Falha ao salvar o arquivo de configurações");
         return;
     }
     
@@ -524,7 +524,7 @@ void SettingsDialog::saveJsonFromTreeWidget(rapidjson::Document& doc, rapidjson:
 }
 
 void SettingsDialog::resetSettings() {
-    QMessageBox msgBox(QMessageBox::Question, "Reset Settings", "Are you sure you want to reset all settings to default?", 
+    QMessageBox msgBox(QMessageBox::Question, "Resetar Configurações", "Tem certeza que deseja resetar todas as configurações para o padrão?", 
                       QMessageBox::Yes | QMessageBox::No, this);
     WindowUtils::setWindowIcon(&msgBox);
     

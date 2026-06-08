@@ -100,11 +100,11 @@ progressBar(nullptr)
     QHBoxLayout* topRowLayout = new QHBoxLayout();
 
     //username and IP buttons
-    nameButton = new QPushButton("Change Name", this);
+    nameButton = new QPushButton("Alterar Nome", this);
     nameButton->setStyleSheet("background-color: rgba(85, 85, 85, 180); color: white; border: none; padding: 5px;");
     topRowLayout->addWidget(nameButton);
 
-    ipButton = new QPushButton("Change IP Address", this);
+    ipButton = new QPushButton("Alterar IP do Servidor", this);
     ipButton->setStyleSheet("background-color: rgba(85, 85, 85, 180); color: white; border: none; padding: 5px;");
     topRowLayout->addWidget(ipButton);
 
@@ -113,7 +113,7 @@ progressBar(nullptr)
     topRowLayout->addItem(spacer);
 
     //docs
-    wikiButton = new QPushButton("Shield Docs", this);
+    wikiButton = new QPushButton("Documentação", this);
     wikiButton->setStyleSheet("background-color: rgba(85, 85, 85, 180); color: white; border: none; padding: 5px;");
     topRowLayout->addWidget(wikiButton);
 
@@ -168,12 +168,12 @@ progressBar(nullptr)
     settingsLayout->addItem(settingsSpacer);
 
 	//close launcher on play checkbox
-    closeLauncherCheckbox = new QCheckBox("Close Launcher on Play", this);
+    closeLauncherCheckbox = new QCheckBox("Fechar Launcher ao Jogar", this);
     closeLauncherCheckbox->setStyleSheet("color: white; background: transparent; font-weight: bold;");
     settingsLayout->addWidget(closeLauncherCheckbox);
 
     //settings button 
-    settingsButton = new QPushButton("Client Settings", this);
+    settingsButton = new QPushButton("Configurações", this);
     settingsButton->setStyleSheet("background-color: rgba(85, 85, 85, 180); color: white; border: none; padding: 5px; min-width: 80px;");
     settingsButton->setFixedWidth(120);
     settingsLayout->addWidget(settingsButton);
@@ -246,7 +246,7 @@ void MainWindow::startGame(bool isOnline, bool isVanilla) {
     // not really needed for multiple instances
     /*
     if (DllLoading::isGameRunning()) {
-        showMessageBox(QMessageBox::Warning, "Warning", "Game is already running!");
+        showMessageBox(QMessageBox::Warning, "Aviso", "O jogo já está em execução!");
         progressBar->setVisible(false);
 
 		vanillaButton->setEnabled(true);
@@ -271,17 +271,17 @@ void MainWindow::startGame(bool isOnline, bool isVanilla) {
             QString errorMsg;
             switch(result) {
             case DllLoading::Result::FileNotFound:
-                errorMsg = QString("Required files not found! Make sure %1 exists in the launcher directory.")
+                errorMsg = QString("Arquivos necessários não encontrados! Certifique-se que %1 existe na pasta do launcher.")
                     .arg(isOnline ? "mp.zip" : "solo.zip");
                 break;
             case DllLoading::Result::InvalidGamePath:
-                errorMsg = "BlackOps4.exe not found! Make sure the launcher shortcut is in the game directory.";
+                errorMsg = "BlackOps4.exe não encontrado! Certifique-se que o atalho do launcher está na pasta do jogo.";
                 break;
             case DllLoading::Result::ZipError:
-                errorMsg = "Failed to extract files!";
+                errorMsg = "Falha ao extrair arquivos!";
                 break;
             default:
-                errorMsg = "Unknown error occurred while extracting files.";
+                errorMsg = "Erro desconhecido ao extrair arquivos.";
             }
             showMessageBox(QMessageBox::Critical, "Error", errorMsg);
             progressBar->setVisible(false);
@@ -319,7 +319,7 @@ void MainWindow::startGame(bool isOnline, bool isVanilla) {
         gameExePath = currentPath.parent_path().parent_path() / game_exe;
     }
     else {
-        showMessageBox(QMessageBox::Critical, "Error", "Could not locate BlackOps4.exe!");
+        showMessageBox(QMessageBox::Critical, "Erro", "Não foi possível localizar o BlackOps4.exe!");
         progressBar->setVisible(false);
 
 		vanillaButton->setEnabled(true);
@@ -329,7 +329,7 @@ void MainWindow::startGame(bool isOnline, bool isVanilla) {
     }
 
     if (!DllLoading::launchGame(gameExePath.string(), isOnline)) {
-        showMessageBox(QMessageBox::Critical, "Error", "Failed to start the game!");
+        showMessageBox(QMessageBox::Critical, "Erro", "Falha ao iniciar o jogo!");
         progressBar->setVisible(false);
 
 		vanillaButton->setEnabled(true);
@@ -353,7 +353,7 @@ void MainWindow::startGame(bool isOnline, bool isVanilla) {
 void MainWindow::setName() {
 
     QDialog dialog(this);
-    dialog.setWindowTitle("Set Name");
+    dialog.setWindowTitle("Definir Nome");
     dialog.setFixedWidth(400);
 
     WindowUtils::setWindowIcon(&dialog);
@@ -379,7 +379,7 @@ void MainWindow::setName() {
     std::string jsonPath = (gamePath / "project-bo4.json").string();
     std::string currentName = JsonUtils::getJsonItem(jsonPath, "identity", "name");
 
-    QLabel label("Enter your name:");
+    QLabel label("Digite seu nome:");
     layout.addWidget(&label);
 
     QLineEdit lineEdit;
@@ -395,14 +395,14 @@ void MainWindow::setName() {
     if (dialog.exec() == QDialog::Accepted) {
         std::string newName = lineEdit.text().toStdString();
         if (newName.empty()) {
-            QMessageBox msgBox(QMessageBox::Warning, "Warning", "Name cannot be empty!", QMessageBox::Ok, this);
+            QMessageBox msgBox(QMessageBox::Warning, "Aviso", "O nome não pode estar vazio!", QMessageBox::Ok, this);
             WindowUtils::setWindowIcon(&msgBox);
             msgBox.exec();
             return;
         }
 
         if (!JsonUtils::replaceJsonValue(jsonPath, newName, "identity", "name")) {
-            QMessageBox msgBox(QMessageBox::Critical, "Error", "Failed to save name!", QMessageBox::Ok, this);
+            QMessageBox msgBox(QMessageBox::Critical, "Erro", "Falha ao salvar o nome!", QMessageBox::Ok, this);
             WindowUtils::setWindowIcon(&msgBox);
             msgBox.exec();
         }
@@ -412,7 +412,7 @@ void MainWindow::setName() {
 void MainWindow::setIp() {
 
     QDialog dialog(this);
-    dialog.setWindowTitle("Set Server IP");
+    dialog.setWindowTitle("Definir IP do Servidor");
     dialog.setFixedWidth(400);
 
     WindowUtils::setWindowIcon(&dialog);
@@ -437,7 +437,7 @@ void MainWindow::setIp() {
     std::string jsonPath = (gamePath / "project-bo4.json").string();
     std::string currentIp = JsonUtils::getJsonItem(jsonPath, "demonware", "ipv4");
 
-    QLabel label("Enter server IP address:");
+    QLabel label("Digite o endereço IP do servidor:");
     layout.addWidget(&label);
 
     QLineEdit lineEdit;
@@ -453,14 +453,14 @@ void MainWindow::setIp() {
     if (dialog.exec() == QDialog::Accepted) {
         std::string newIp = lineEdit.text().toStdString();
         if (newIp.empty()) {
-            QMessageBox msgBox(QMessageBox::Warning, "Warning", "IP address cannot be empty!", QMessageBox::Ok, this);
+            QMessageBox msgBox(QMessageBox::Warning, "Aviso", "O endereço IP não pode estar vazio!", QMessageBox::Ok, this);
             WindowUtils::setWindowIcon(&msgBox);
             msgBox.exec();
             return;
         }
 
         if (!JsonUtils::replaceJsonValue(jsonPath, newIp, "demonware", "ipv4")) {
-            QMessageBox msgBox(QMessageBox::Critical, "Error", "Failed to save IP address!", QMessageBox::Ok, this);
+            QMessageBox msgBox(QMessageBox::Critical, "Erro", "Falha ao salvar o endereço IP!", QMessageBox::Ok, this);
             WindowUtils::setWindowIcon(&msgBox);
             msgBox.exec();
         }
