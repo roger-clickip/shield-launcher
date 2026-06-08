@@ -196,11 +196,11 @@ namespace updater {
             utils::configuration::WriteString("UpdateInfo", "LastPromptedVersion", assetName);
 
             QMessageBox msgBox(parent);
-            msgBox.setWindowTitle("Update Available");
-            msgBox.setText(QString("A new version (%1) is available. Your current version is %2.")
+            msgBox.setWindowTitle("Atualização Disponível");
+            msgBox.setText(QString("Uma nova versão (%1) está disponível. Sua versão atual é %2.")
                 .arg(QString::fromStdString(latestVersion))
                 .arg(QString::fromStdString(SERVER_VERSION)));
-            msgBox.setInformativeText("Do you want to update now?");
+            msgBox.setInformativeText("Deseja atualizar agora?");
             msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
             msgBox.setDefaultButton(QMessageBox::Yes);
 
