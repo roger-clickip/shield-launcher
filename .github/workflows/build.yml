@@ -24,7 +24,7 @@ jobs:
 
     - name: Compilar em Release
       run: |
-        msbuild build\shield-launcher.sln /p:Configuration=Release /p:Platform=x64
+        msbuild build\Shield_launcher.sln /p:Configuration=Release /p:Platform=x64
 
     - name: Upload do EXE
       uses: actions/upload-artifact@v4
